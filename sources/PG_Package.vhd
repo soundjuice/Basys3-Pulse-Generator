@@ -9,7 +9,7 @@
 -- Target Devices: Basys 3
 -- Tool Versions: 
 -- Description: 
---  Package module that provides type, component and constant defines.
+--  Package module that provides type, component, and constant defines.
 --
 -- Dependencies: 
 -- 
