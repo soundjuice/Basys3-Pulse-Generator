@@ -12,9 +12,11 @@ Pulse Generator program that outputs a square wave signal between 0v and 3.3v on
 
 <center>
 
-> **The PMOD VCC and Ground pins can deliver up to 1A of current**
+>
+> **PMOD Ports supply a max current of 2A / typical current between 100mA to 1.5A on a 3.3v supply with a zener diode regulator for each port.**
+> **The VCC and Ground pins can deliver up to 1A of current**.
 > Pmod data signals are not matched pairs, and they are routed using best-available tracks without impedance control or delay matching. 
-> &mdash; <cite class="title">Basys 3™ FPGA Board Reference Manual.</cite> <cite class="author">Digilent, Inc.</cite> pg. 17
+> &mdash; <cite class="title">Basys 3™ FPGA Board Reference Manual.</cite> <cite class="author">Digilent, Inc.</cite>
 
 _Connect PMOD output JA1:J1 to an input and use either GND port on JA as common ground._
 
