@@ -33,11 +33,11 @@ entity Button_Debounce is
           btnL_i         : in  std_logic;
           btnR_i         : in  std_logic;
           btnD_i         : in  std_logic;
-          btnC_deb_o   : out std_logic;
-          btnU_deb_o   : out std_logic;
-          btnL_deb_o   : out std_logic;
-          btnR_deb_o   : out std_logic;
-          btnD_deb_o   : out std_logic);
+          btnC_deb_o     : out std_logic;
+          btnU_deb_o     : out std_logic;
+          btnL_deb_o     : out std_logic;
+          btnR_deb_o     : out std_logic;
+          btnD_deb_o     : out std_logic);
 end Button_Debounce;
 
 architecture Behavioral of Button_Debounce is
@@ -78,10 +78,10 @@ begin
             btnL_memory <= (others => '0');
             btnR_memory <= (others => '0');
             btnD_memory <= (others => '0');
+
         elsif (rising_edge(clk_i)) then
             if (Button_Counter = PERIOD_COUNT_500uS) then
                 Button_Counter := 1;
-                -- (0) = center - (1) = up - (2) = left - (3) = right - (4) = down
                 btnC_memory <= btnC_memory(19 downto 0) & btnC_i;
                 btnU_memory <= btnU_memory(19 downto 0) & btnU_i;
                 btnL_memory <= btnL_memory(19 downto 0) & btnL_i;
