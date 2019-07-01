@@ -57,16 +57,16 @@ architecture Behavioral of Button_Debounce is
 begin
 
 ------ [Button State Sample] -------------------------------------------------PROCESS
--- On clock edge, each button press is sampled into a 20 bit register through
+-- On clock edge, each button press is sampled into a 21 bit register through
 -- bit shifting.
 --
 -- The buttons are sampled every 500us.
 --
--- The 20 bit register will cover a sampling period of 10ms (500us * 20 = 10ms) to
+-- The 21 bit register will cover a sampling period of 10.5ms (500us * 21 = 10.5ms) to
 -- detect debouncing.
 --
--- The debounce buttons (clean) are active when all 20 bits of the register are 
--- active else if there exists a single non active bit ('0'), it is not active. 
+-- The debounce buttons are active when all 21 bits of the register are active else 
+-- if there exists a single non active bit ('0'), it is not active. 
 -------------------------------------------------------------------------------------
     Button_State_Sample : process(clk_i, system_reset_i)
         variable Button_Counter : int range 1 to PERIOD_COUNT_500uS := 1;
