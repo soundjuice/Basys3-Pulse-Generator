@@ -23,7 +23,6 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.numeric_std.all;
 library work;
 use work.PG_Package.all;
 
@@ -185,12 +184,14 @@ begin
                             Increase_Again, Decrease_Again, Scroll_Complete)
     begin
         case PG_Current_State is
+          
             when Initialization =>
                 if (Scroll_Complete = TRUE) then
                     PG_Next_State <= Program;
                 else
                     PG_Next_State <= Initialization;
                 end if;
+                  
             when Program =>
                 if (Start_Generator = ACTIVE) then
                     PG_Next_State <= Run;
@@ -247,9 +248,12 @@ begin
 -- Next, predefined full count values are selected based on the chosen frequency where
 -- the error is no more than 0.05% (error across all frequencies < 40Hz)  
 --
--- Equation : 100MHz/(Chosen Frequency[kHz]) = Full Count | (Rounded)
---          : full_count * duty cycle[%] = High Cycle Count
+-- Equation : 100MHz/(Chosen Frequency[kHz]) = Full Count
+--          : Full Count * Duty Cycle[%] = High Cycle Count
 --
+-- Frequency and duty_cycle variables are converted into single digits in the tens 
+-- and ones place.     
+--          
 -- Notes: More advanced pipelining will be implemented to the multiplier and divider.
 -------------------------------------------------------------------------------------                        
     Freq_DC_Calculation : process(system_reset_sw, clk, PG_Current_State, 
@@ -269,6 +273,7 @@ begin
                 duty_cycle := 50;
             else
                 case PG_Current_State is
+                  
                     when Initialization | Reset =>
                         frequency  := 1;
                         duty_cycle := 50;
@@ -290,8 +295,10 @@ begin
                     when others =>
                         frequency  := frequency;
                         duty_cycle := duty_cycle;
+
                 end case;
 
+                -- Rounded precalculated full_count values (100MHz/Chosen Frequency)
                 case frequency is 
                     when 99 => full_count := 1010;
                     when 98 => full_count := 1020;
@@ -396,6 +403,7 @@ begin
                 
                 Full_Count_Signal <= full_count;   
 
+                -- Pipelining
                 High_Count_Multi  <= Full_Count_Signal * duty_cycle;
                 Pipe_Multi(0)     <= High_Count_Multi;
                 Pipe_Multi(1)     <= Pipe_Multi(0);
@@ -420,8 +428,8 @@ begin
      end process;
 
 ------ [Freq/DC to Segment] -------------------------------SELECTED SIGNAL ASSIGNMENT
--- Takes the Frequency_Signal and Duty_Cycle_Signal values and converts them into
--- single digits in the tens and ones place.
+-- From Freq/DC Calculation process, frequency and duty_cycle values are converted
+-- into single digits in the tens and ones place.
 --
 -- The single digit values are translated into 7 segment values which are then used
 -- to update Freq_7Seg and Duty_7Seg Signals for the 7 segment display.
@@ -509,6 +517,7 @@ begin
                 output_counter := 0;
             else 
                 case PG_Current_State is
+                  
                     when Run =>
                         output_counter := output_counter + 1;
                         if (output_counter < High_Count_Signal) then
@@ -524,6 +533,7 @@ begin
                     when others =>
                         JA1_J1 <= '0';
                         output_counter := 0;
+
                 end case;
             end if;
         end if;                
@@ -627,6 +637,7 @@ begin
                 Segment_Signal(3 downto 0) <= RESET_7SEG; 
             else
                 case PG_Current_State is
+                  
                     when Initialization =>
                         Decimal_Point_Signal <= DECIMAL_OFF;
                         Segment_Signal(3 downto 0) <= Segment_Scroll_Signal;
@@ -698,6 +709,7 @@ begin
                     Run_Flick     <= RUN_FLICK_RESET;
                 else
                     case PG_Current_State is 
+                      
                         when Program =>
                             Run_Flick <= RUN_FLICK_RUN; -- Display "run" initially in Run state
                             case Program_Flick is 
@@ -725,10 +737,11 @@ begin
                         when others =>
                             Program_Flick <= PROG_FLICK_RESET;
                             Run_Flick     <= RUN_FLICK_RESET;
+
                     end case;
                 end if;
             else
-                flick_counter := flick_counter + 1; -- increment counter
+                flick_counter := flick_counter + 1;
             end if;
         end if;        
     end process;
@@ -763,6 +776,7 @@ begin
                     index_2 := 4;
                 else
                     case PG_Current_State is
+                      
                         when Initialization =>
                             if (index_1 = 0) then
                                 if (index_2 = 0) then
@@ -778,12 +792,14 @@ begin
                                 Segment_Scroll_Signal(3 downto 0) <= 
                                     Segment_Scroll_Signal(2 downto 0) & SCROLL_7SEG(index_1);
                                 Scroll_Complete <= FALSE;
-                            end if;                 
+                            end if;    
+                              
                         when others =>
                             Segment_Scroll_Signal <= ALL_CLEAR_7SEG;
                             Scroll_Complete <= FALSE;
                             index_1 := 13;
                             index_2 := 4;
+
                     end case;
                 end if;
             else
@@ -814,6 +830,7 @@ begin
                 display_counter := 1;
             else
                 case PG_Current_State is
+                  
                     when Finish_Display =>
                         if (display_counter = PERIOD_COUNT_500mS) then
                             Finish_Display_Timer <= COMPLETE;
@@ -823,9 +840,11 @@ begin
                         else
                             display_counter := display_counter + 1;
                         end if;
+                          
                     when others =>
                         Finish_Display_Timer <= INCOMPLETE;
                         display_counter := 1;
+
                 end case;
             end if;
         end if;
@@ -841,9 +860,9 @@ begin
 -- are set FALSE in order to be able to detect another button press in Finish_Display
 -- state. 
 --
--- This is done because on the rising edge of a button press, if the state leaves 
--- Finish_Display, it would have to detect another button rising edge in order to 
--- set the [Inc/Dec]_Again signal FALSE.
+-- This is done because on the rising edge of a button press, if the state is in any
+-- other state besides Finish_Display, it would have to detect another button rising 
+-- edge in order to set the [Inc/Dec]_Again signal FALSE.
 ------------------------------------------------------------------------------------- 
     Finish_Display_Button_Detect_Inc : process(system_reset_sw, Increase_Value, 
                                                PG_Current_State,Program_Reset)
@@ -897,6 +916,7 @@ begin
                     led_start := ACTIVE;
                 else
                     case PG_Current_State is 
+                      
                         when Run =>
                             if (led_start = ACTIVE) then 
                                 if (Led_Signal = FULL_LED) then
@@ -915,6 +935,7 @@ begin
                         when others =>
                             Led_Signal <= CLEAR_LED;
                             led_start := ACTIVE;
+                      
                     end case;
                 end if;
             else
