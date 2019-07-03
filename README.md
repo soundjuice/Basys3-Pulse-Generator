@@ -45,9 +45,9 @@ _Connect PMOD output JA1:J1 to an input and use either GND port on JA as common 
 	- select RTL Project (Register-transfer level)
 2. In _Add Sources_ window, click **Add Files** and select all .vhd files within the sources folder. 
 	- Be sure to select _"Copy sources into project"_ to prevent overwriting of original files.
-3. In _Add Constraints_ window, click **Add Files** and select all .xdc constraint files within the constraints folder.
+3. In _Add Constraints_ window, click **Add Files** and select the .xdc constraint file within the constraints folder.
 	- Be sure to select _"Copy sources into project"_ to prevent overwriting of original files.
-4. In _Default Part_ window, select **Boards** and search for Basys3 in the search bar. If you installed the Basys 3 board file correctly, it should show as the image below.
+4. In _Default Part_ window, select **Boards** and search for Basys3 in the search bar.
 5. Once on the _PROJECT MANAGER_ page, execute these commands in the following order:
  
  |Commands|Image
