@@ -4,11 +4,11 @@ Pulse Generator program that outputs a square wave signal between 0v and 3.3v on
 
 <b>Basys 3 Layout</b>
 	
-![Basys-3-Layout](https://github.com/soundjuice/Basys3-Pulse-Generator/blob/master/docs/images/Basys-3-Pulse-Generator-Layout.png)
+![Basys-3-Layout](https://github.com/soundjuice/Basys3-Pulse-Generator/blob/master/images/Basys-3-Pulse-Generator-Layout.png)
 
 | PMOD Ports | PMOD JA Labels |
 |--|--|
-|![PMOD-Ports](https://github.com/soundjuice/Basys3-Pulse-Generator/blob/master/docs/images/Pmod-Port.png)|![PMOD-Port-Labels](https://github.com/soundjuice/Basys3-Pulse-Generator/blob/master/docs/images/Pmod-Port-Labels.png)|
+|![PMOD-Ports](https://github.com/soundjuice/Basys3-Pulse-Generator/blob/master/images/Pmod-Port.png)|![PMOD-Port-Labels](https://github.com/soundjuice/Basys3-Pulse-Generator/blob/master/images/Pmod-Port-Labels.png)|
 
 <center>
 
@@ -52,7 +52,7 @@ _Connect PMOD output JA1:J1 to an input and use either GND port on JA as common 
  
  |Commands|Image
  |:-:|:-:|
- |1. **Run Synthesis** <br> 2. **Run Implementation** <br> 3. **Generate Bitstream** <br> 4. **Open Target** (after connecting to Basys 3 board via microUSB) <br> 5. **Program Device** (select board and click **Program** on pop-up)|![Vivado-Flow-Navigator](https://github.com/soundjuice/Basys3-Pulse-Generator/blob/master/docs/images/Vivado-Flow-Navigator.PNG)|
+ |1. **Run Synthesis** <br> 2. **Run Implementation** <br> 3. **Generate Bitstream** <br> 4. **Open Target** (after connecting to Basys 3 board via microUSB) <br> 5. **Program Device** (select board and click **Program** on pop-up)|![Vivado-Flow-Navigator](https://github.com/soundjuice/Basys3-Pulse-Generator/blob/master/images/Vivado-Flow-Navigator.PNG)|
 
 **BEFORE OPERATION - Connect PMOD output JA1:J1 to an input and use either GND port on JA as common ground.** 
 ## Resources
