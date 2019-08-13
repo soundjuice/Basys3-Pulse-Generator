@@ -184,14 +184,12 @@ begin
                             Increase_Again, Decrease_Again, Scroll_Complete)
     begin
         case PG_Current_State is
-          
             when Initialization =>
                 if (Scroll_Complete = TRUE) then
                     PG_Next_State <= Program;
                 else
                     PG_Next_State <= Initialization;
                 end if;
-                  
             when Program =>
                 if (Start_Generator = ACTIVE) then
                     PG_Next_State <= Run;
@@ -202,13 +200,10 @@ begin
                 else
                     PG_Next_State <= Program;
                 end if;
-            
             when Increase =>
                 PG_Next_State <= Finish_Display;
-                
             when Decrease =>
                 PG_Next_State <= Finish_Display;
-                
             when Finish_Display =>
                 if (Finish_Display_Timer = COMPLETE) then
                     PG_Next_State <= Program; 
@@ -219,17 +214,14 @@ begin
                 else
                     PG_Next_State <= Finish_Display; 
                 end if;
-
             when Run =>
                 if (Stop_Generator = ACTIVE) then
                     PG_Next_State <= Program;
                 else
                     PG_Next_State <= Run;
                 end if;
-            
             when Reset =>
                 PG_Next_State <= Initialization;
-                
         end case;            
     end process;
 --===================================================================================
@@ -273,29 +265,24 @@ begin
                 duty_cycle := 50;
             else
                 case PG_Current_State is
-                  
                     when Initialization | Reset =>
                         frequency  := 1;
                         duty_cycle := 50;
-                        
                     when Increase =>
                         if (config_mode_sw = PROG_FREQ and frequency < 99) then
                             frequency := frequency + 1; 
                         elsif (config_mode_sw = PROG_DUTY and duty_cycle < 99) then
                             duty_cycle := duty_cycle + 1; 
                         end if;
-                        
                     when Decrease =>
                         if (config_mode_sw = PROG_FREQ and frequency > 1) then
                             frequency := frequency - 1; 
                         elsif (config_mode_sw = PROG_DUTY and duty_cycle > 1) then
                             duty_cycle := duty_cycle - 1; 
                         end if;
-                        
                     when others =>
                         frequency  := frequency;
                         duty_cycle := duty_cycle;
-
                 end case;
 
                 -- Rounded precalculated full_count values (100MHz/Chosen Frequency)
@@ -418,8 +405,8 @@ begin
                 Pipe_Div(4)       <= Pipe_Div(3);
                 Pipe_Div(5)       <= Pipe_Div(4);
                 High_Count_Signal <= Pipe_Div(5);
-                
             end if;
+              
             Ones_FR_Signal <= frequency mod 10;
             Tens_FR_Signal <= (frequency - Ones_FR_Signal) / 10;
             Ones_DC_Signal <= duty_cycle mod 10; 
@@ -445,7 +432,6 @@ begin
                          SEVEN_7SEG  when 7,
                          EIGHT_7SEG  when 8,
                          NINE_7SEG   when others;
-                         
     with Tens_FR_Signal select
         Tens_Place_FR <= ZERO_7SEG   when 0,    
                          ONE_7SEG    when 1,
@@ -457,7 +443,6 @@ begin
                          SEVEN_7SEG  when 7,
                          EIGHT_7SEG  when 8,
                          NINE_7SEG   when others;
-                         
     with Ones_DC_Signal select
         Ones_Place_DC <= ZERO_7SEG   when 0,    
                          ONE_7SEG    when 1,
@@ -469,7 +454,6 @@ begin
                          SEVEN_7SEG  when 7,
                          EIGHT_7SEG  when 8,
                          NINE_7SEG   when others;
-                         
     with Tens_DC_Signal select
         Tens_Place_DC <= ZERO_7SEG   when 0,    
                          ONE_7SEG    when 1,
@@ -481,10 +465,9 @@ begin
                          SEVEN_7SEG  when 7,
                          EIGHT_7SEG  when 8,
                          NINE_7SEG   when others; 
-                         
+
     Freq_7Seg <= (F_7SEG,r_7SEG,Tens_Place_FR,Ones_Place_FR); 
     Duty_7Seg <= (d_7SEG,c_7SEG,Tens_Place_DC,Ones_Place_DC);    
-
 
 ------ [PMOD Output] ---------------------------------------------------------PROCESS
 -- PMOD output that delivers the Pulse Generator signal.
@@ -517,7 +500,6 @@ begin
                 output_counter := 0;
             else 
                 case PG_Current_State is
-                  
                     when Run =>
                         output_counter := output_counter + 1;
                         if (output_counter < High_Count_Signal) then
@@ -529,11 +511,9 @@ begin
                             JA1_J1 <= '1';
                             output_counter := 0;
                         end if; 
-                           
                     when others =>
                         JA1_J1 <= '0';
                         output_counter := 0;
-
                 end case;
             end if;
         end if;                
@@ -637,11 +617,9 @@ begin
                 Segment_Signal(3 downto 0) <= RESET_7SEG; 
             else
                 case PG_Current_State is
-                  
                     when Initialization =>
                         Decimal_Point_Signal <= DECIMAL_OFF;
                         Segment_Signal(3 downto 0) <= Segment_Scroll_Signal;
-                        
                     when Program =>
                         if (Program_Flick = PROG_FLICK_DATA) then   
                             Decimal_Point_Signal <= DECIMAL_ON; 
@@ -654,7 +632,6 @@ begin
                             Decimal_Point_Signal <= DECIMAL_OFF;
                             Segment_Signal(3 downto 0) <= PROG_7SEG;
                         end if;
-                        
                     when Increase | Decrease | Finish_Display =>
                         Decimal_Point_Signal <= DECIMAL_ON;
                         if (config_mode_sw = PROG_FREQ) then
@@ -662,7 +639,6 @@ begin
                         elsif (config_mode_sw = PROG_DUTY) then
                             Segment_Signal(3 downto 0) <= Duty_7Seg;
                         end if;
-                    
                     when Run =>
                         if (Run_Flick = RUN_FLICK_FREQ) then
                             Decimal_Point_Signal <= DECIMAL_ON;
@@ -674,7 +650,6 @@ begin
                             Decimal_Point_Signal <= DECIMAL_OFF;
                             Segment_Signal(3 downto 0) <= RUN_7SEG;
                         end if;
-                    
                     when Reset =>
                         Decimal_Point_Signal <= DECIMAL_OFF;
                         Segment_Signal(3 downto 0) <= RESET_7SEG;
@@ -709,7 +684,6 @@ begin
                     Run_Flick     <= RUN_FLICK_RESET;
                 else
                     case PG_Current_State is 
-                      
                         when Program =>
                             Run_Flick <= RUN_FLICK_RUN; -- Display "run" initially in Run state
                             case Program_Flick is 
@@ -720,7 +694,6 @@ begin
                                 when others =>
                                     Program_Flick <= PROG_FLICK_PROG;
                             end case;
-                            
                         when Run =>  
                             Program_Flick <= PROG_FLICK_PROG; -- Display "ProG" initially in Program state
                             case Run_Flick is 
@@ -733,11 +706,9 @@ begin
                                 when others =>
                                     Run_Flick <= RUN_FLICK_RUN;
                             end case;
-                            
                         when others =>
                             Program_Flick <= PROG_FLICK_RESET;
                             Run_Flick     <= RUN_FLICK_RESET;
-
                     end case;
                 end if;
             else
@@ -776,7 +747,6 @@ begin
                     index_2 := 4;
                 else
                     case PG_Current_State is
-                      
                         when Initialization =>
                             if (index_1 = 0) then
                                 if (index_2 = 0) then
@@ -793,13 +763,11 @@ begin
                                     Segment_Scroll_Signal(2 downto 0) & SCROLL_7SEG(index_1);
                                 Scroll_Complete <= FALSE;
                             end if;    
-                              
                         when others =>
                             Segment_Scroll_Signal <= ALL_CLEAR_7SEG;
                             Scroll_Complete <= FALSE;
                             index_1 := 13;
                             index_2 := 4;
-
                     end case;
                 end if;
             else
@@ -830,7 +798,6 @@ begin
                 display_counter := 1;
             else
                 case PG_Current_State is
-                  
                     when Finish_Display =>
                         if (display_counter = PERIOD_COUNT_500mS) then
                             Finish_Display_Timer <= COMPLETE;
@@ -840,11 +807,9 @@ begin
                         else
                             display_counter := display_counter + 1;
                         end if;
-                          
                     when others =>
                         Finish_Display_Timer <= INCOMPLETE;
                         display_counter := 1;
-
                 end case;
             end if;
         end if;
@@ -916,7 +881,6 @@ begin
                     led_start := ACTIVE;
                 else
                     case PG_Current_State is 
-                      
                         when Run =>
                             if (led_start = ACTIVE) then 
                                 if (Led_Signal = FULL_LED) then
@@ -931,11 +895,9 @@ begin
                                     Led_Signal <= Led_Signal(14 downto 0) & '0';
                                 end if;
                             end if;
-                        
                         when others =>
                             Led_Signal <= CLEAR_LED;
                             led_start := ACTIVE;
-                      
                     end case;
                 end if;
             else
