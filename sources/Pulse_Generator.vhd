@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: Ahmad Frazier
+-- Engineers: Ahmad Frazier, Cheik Sylla
 -- 
 -- Create Date: 06/17/2019 04:20:02 PM
 -- Design Name: 
