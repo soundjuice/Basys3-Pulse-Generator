@@ -57,3 +57,6 @@ _Connect PMOD output JA1:J1 to an input and use either GND port on JA as common 
 **BEFORE OPERATION - Connect PMOD output JA1:J1 to an input and use either GND port on JA as common ground.** 
 ## Resources
 * [Basys 3 Resources](https://reference.digilentinc.com/reference/programmable-logic/basys-3/start)
+## Credits
+Ahmad Frazier
+Cheik Sylla
